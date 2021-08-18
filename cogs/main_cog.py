@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 
 class main_cog(commands.Cog):
-  def __init__(self, bot):
-      self.bot = bot
+  def __init__(self, client):
+      self.client = client
       self.help_message = """
 ```
 General commands:
@@ -23,9 +23,25 @@ Music commands:
   #some debug info so that we know the bot has started    
   @commands.Cog.listener()
   async def on_ready(self):
-    await self.bot.change_presence(status= discord.Status.online,activity=discord.Game(name='?Help'))
+    await self.client.change_presence(status= discord.Status.online,activity=discord.Game(name='?Help'))
     print("Ready")
-   
+  
+@commands.Cog.listener()
+async def on_member_join(member):
+  print(f'{member} has joined')
+
+@commands.command()
+async def on_command_error(ctx,error):
+  if isinstance(error,commands.CommandNotFound):
+    await ctx.send("Command is not found")
+
+@commands.Cog.listener()
+async def on_member_remove(member):
+  print(f'{member} has joined')
+
+# @client.command()
+# async def clear(ctx,amount = 5):
+#   await ctx.channel.purge(limit = amount)
 
   # @commands.command(name="help", help="Displays all the available commands")
   # async def help(self, ctx):

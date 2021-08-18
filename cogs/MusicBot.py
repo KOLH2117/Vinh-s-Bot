@@ -4,8 +4,8 @@ from discord.ext import commands
 from youtube_dl import YoutubeDL
 
 class MusicBot(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, client):
+        self.client = client
     
         #all the music related stuff
         self.is_playing = False
@@ -16,7 +16,6 @@ class MusicBot(commands.Cog):
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
         self.vc = ""
-        print("init")
 
      #searching the item on youtube
     def search_yt(self, item):
@@ -101,6 +100,11 @@ class MusicBot(commands.Cog):
             self.vc.stop()
             #try to play next in the queue if it exists
             await self.play_music()
+    
+    @commands.command(name="stop", help="Stop the current music",aliases=['s'])
+    async def stop(self,ctx):
+      ctx.send(f"Stop {self.music_queue[0][0]['title']}\n")
+      await self.vc.stop()
 
 def setup(client):
   client.add_cog(MusicBot(client))
